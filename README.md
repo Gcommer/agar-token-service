@@ -13,6 +13,18 @@ obviates the need for this service.
 
 Source: https://github.com/Gcommer/agar-token-service
 
+If you use this service please have your clients donate more tokens
+then you take :)
+
+If you want to help donate extra tokens:
+https://github.com/Gcommer/agar-token-donator
+
+*IMPORTANT NOTE:* All tokens are only accepted by Agar.io if they are
+redeemed by a client with the same User-Agent string that accepted
+them. For that reason, ALL tokens donated to this service should have
+been generated and should be used with the following User-Agent
+`Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0`
+
 ## API
 
 All requests are simple HTTP GET requests to the specified URLs. CORS
