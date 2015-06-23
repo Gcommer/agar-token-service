@@ -54,13 +54,18 @@
 
     <h3>Status</h3>
 
-    URL: `/status` <br>
+    URL: `/status[?all]` <br>
 
     Returns: `{ msg: 'status', status: {...} }`<br>
 
     <p>
     `status` is a JSON object mapping all known servers -> number of
     available tokens.
+
+    The query string is optional. If the query parameter "all" is
+    sent, then all servers we've received tokens for will be
+    returned. Otherwise, only servers with currently available tokens
+    will be returned.
 
     <h3>Donate</h3>
 

@@ -38,7 +38,20 @@ app.get('/status', function (req, res) {
     return;
   }
 
-  res.send({ msg: 'status', status: token_counts });
+  var status;
+  if (!req.query.hasOwnProperty("all")) {
+    status = {};
+    Object.keys(token_counts).forEach(function (url) {
+      if (token_counts[url] > 0) {
+        status[url] = token_counts[url];
+      }
+    });
+  } else {
+    status = token_counts;
+  }
+
+  res.send({ msg: 'status',
+             status: status });
 });
 
 app.get('/donate', function (req, res) {
