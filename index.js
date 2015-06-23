@@ -9,6 +9,13 @@ var tokens = {};
 var token_counts = {};
 var killFlag = false;
 
+// seconds since the UNIX epoch
+function time() {
+  return new Date() / 1000;
+}
+
+var TICKET_EXPIRE_SECONDS = 100;
+
 function isValidURL(url) {
   var parts = url.split(':');
   if (parts.length !== 2) {
@@ -53,6 +60,7 @@ app.get('/donate', function (req, res) {
     return;
   }
 
+  token = { time: time(), token: token };
   if (tokens.hasOwnProperty(server)) {
     tokens[server].push(token);
     token_counts[server] += 1;
@@ -73,7 +81,7 @@ app.get('/claim', function (req, res) {
   var server = req.query.server;
   if (tokens.hasOwnProperty(server) &&
       tokens[server].length > 0) {
-    var token = tokens[server].shift();
+    var token = tokens[server].shift().token;
     token_counts[server] -= 1;
     res.send({ msg: 'available',
                token: token });
@@ -81,6 +89,18 @@ app.get('/claim', function (req, res) {
     res.send({ msg: 'unavailable' });
   }
 });
+
+setInterval(function () {
+  var cutoff = time() - TICKET_EXPIRE_SECONDS;
+
+  Object.keys(tokens).forEach(function (url) {
+    var arr = tokens[url];
+    while (arr.length > 0 && arr[0].time <= cutoff) {
+      token_counts[url] -= 1;
+      arr.shift();
+    }
+  });
+}, 10000);
 
 app.use('/', express.static('static'));
 
