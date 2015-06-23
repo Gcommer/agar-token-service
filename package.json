@@ -1,0 +1,16 @@
+{
+  "name": "agar-token-service",
+  "version": "0.0.1",
+  "description": "Service to share Agar.IO connection tokens",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gcommer",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^1.2.0",
+    "express": "^4.13.0",
+    "request": "^2.58.0"
+  }
+}
