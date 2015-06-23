@@ -11,6 +11,41 @@ tie tokens to the IP address which requested them. For that reason a
 their code can detect that agar.io has been updated in a way that
 obviates the need for this service.
 
+Source: https://github.com/Gcommer/agar-token-service
+
 ## API
 
-TODO
+All requests are simple HTTP GET requests to the specified URLs. CORS
+is enabled to allow requests from all hosts.
+
+All of these requests return JSON objects with a `msg` field. Any API
+request may return a `msg` of "KILLED", at which point your clients
+should cease using the service.
+
+### Status
+
+URL: `/status`
+
+Returns: `{ msg: 'status', status: {...} }`
+
+`status` is a JSON object mapping all known servers -> number of
+available tokens.
+
+### Donate
+
+URL: `/donate?server=1.2.3.4:1234&token=asdf`
+
+Returns: `{ msg: 'thank_you' | 'invalid_token' | 'invalid_url' }`
+
+'thank_you' indicates successful donation; 'invalid_url' or
+'invalid_token' signify that you sent bad data. URLs must be 4-octet
+IPv4 addresses with a port number (separated by a colon).
+
+### Claim
+
+URL: `/claim?server=1.2.3.4:1234`
+
+Returns: `{ msg: 'unavailable' | 'available' [, token: '...' ] }`
+
+`token` field is only set if a token for the requested server was
+available.

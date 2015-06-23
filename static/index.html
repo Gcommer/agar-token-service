@@ -23,6 +23,40 @@
     <h2>API</h2>
 
     <p>
-    TODO
+    All requests are simple HTTP GET requests to the specified URLs. CORS
+    is enabled to allow requests from all hosts.
+
+    <p>
+    All of these requests return JSON objects with a `msg` field. Any API
+    request may return a `msg` of "KILLED", at which point your clients
+    should cease using the service.
+
+    <h3>Status</h3>
+
+    URL: `/status` <br>
+
+    Returns: `{ msg: 'status', status: {...} }`<br>
+
+    `status` is a JSON object mapping all known servers -> number of
+    available tokens.
+
+    <h3>Donate</h3>
+
+    URL: `/donate?server=1.2.3.4:1234&token=asdf`<br>
+
+    Returns: `{ msg: 'thank_you' | 'invalid_token' | 'invalid_url' }`<br>
+
+    'thank_you' indicates successful donation; 'invalid_url' or
+    'invalid_token' signify that you sent bad data. URLs must be 4-octet
+    IPv4 addresses with a port number (separated by a colon).
+
+    <h3>Claim</h3>
+
+    URL: `/claim?server=1.2.3.4:1234`<br>
+
+    Returns: `{ msg: 'unavailable' | 'available' [, token: '...' ] }`<br>
+
+    `token` field is only set if a token for the requested server was
+    available.
   </body>
 </html>
