@@ -36,12 +36,17 @@ should cease using the service.
 
 ### Status
 
-URL: `/status`
+URL: `/status[?all]`
 
 Returns: `{ msg: 'status', status: {...} }`
 
 `status` is a JSON object mapping all known servers -> number of
 available tokens.
+
+The query string is optional. If the query parameter "all" is sent,
+then all servers we've received tokens for will be returned.
+Otherwise, only servers with currently available tokens will be
+returned.
 
 ### Donate
 
