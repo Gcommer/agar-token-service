@@ -14,12 +14,14 @@
     (server, token) pairs and greedy clients which claim tokens for
     servers they want to connect to.
 
+    <p>
     This service is expected to be short lived if/when Zeach decides
     to tie tokens to the IP address which requested them. For that
     reason a "kill" message is integrated so that anyone who uses this
     service in their code can detect that agar.io has been updated in
     a way that obviates the need for this service.
 
+    <p>
     Source:
     <a href="https://github.com/Gcommer/agar-token-service">https://github.com/Gcommer/agar-token-service</a>
 
@@ -40,6 +42,7 @@
 
     Returns: `{ msg: 'status', status: {...} }`<br>
 
+    <p>
     `status` is a JSON object mapping all known servers -> number of
     available tokens.
 
@@ -49,6 +52,7 @@
 
     Returns: `{ msg: 'thank_you' | 'invalid_token' | 'invalid_url' }`<br>
 
+    <p>
     'thank_you' indicates successful donation; 'invalid_url' or
     'invalid_token' signify that you sent bad data. URLs must be 4-octet
     IPv4 addresses with a port number (separated by a colon).
@@ -59,6 +63,7 @@
 
     Returns: `{ msg: 'unavailable' | 'available' [, token: '...' ] }`<br>
 
+    <p>
     `token` field is only set if a token for the requested server was
     available.
   </body>
