@@ -9,12 +9,22 @@ var tokens = {};
 var token_counts = {};
 var killFlag = false;
 
-// seconds since the UNIX epoch
+// milliseconds since the UNIX epoch (UTC)
 function time() {
-  return new Date() / 1000;
+  var now = new Date();
+  var utc = new Date(Date.UTC(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+    now.getMilliseconds()
+  ));
+  return +utc;
 }
 
-var TICKET_EXPIRE_SECONDS = 100;
+var TICKET_EXPIRE_MS = 60 * 1000;
 
 function isValidURL(url) {
   var parts = url.split(':');
@@ -94,17 +104,18 @@ app.get('/claim', function (req, res) {
   var server = req.query.server;
   if (tokens.hasOwnProperty(server) &&
       tokens[server].length > 0) {
-    var token = tokens[server].shift().token;
+    var token = tokens[server].shift();
     token_counts[server] -= 1;
     res.send({ msg: 'available',
-               token: token });
+               token: token.token,
+               time: token.time });
   } else {
     res.send({ msg: 'unavailable' });
   }
 });
 
 setInterval(function () {
-  var cutoff = time() - TICKET_EXPIRE_SECONDS;
+  var cutoff = time() - TICKET_EXPIRE_MS;
 
   Object.keys(tokens).forEach(function (url) {
     var arr = tokens[url];

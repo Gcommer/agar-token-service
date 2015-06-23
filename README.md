@@ -66,3 +66,6 @@ Returns: `{ msg: 'unavailable' | 'available' [, token: '...' ] }`
 
 `token` field is only set if a token for the requested server was
 available.
+
+`time` is the time when the token was submitted (in UTC milliseconds
+since the UNIX epoch).

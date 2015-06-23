@@ -82,10 +82,13 @@
 
     URL: `/claim?server=1.2.3.4:1234`<br>
 
-    Returns: `{ msg: 'unavailable' | 'available' [, token: '...' ] }`<br>
+    Returns: `{ msg: 'unavailable' | 'available' [, token: '...', time: ...] }`<br>
 
     <p>
     `token` field is only set if a token for the requested server was
     available.
+
+    <p>
+    `time` is the time when the token was submitted (in UTC milliseconds since the UNIX epoch).
   </body>
 </html>
