@@ -50,13 +50,15 @@ returned.
 
 ### Donate
 
-URL: `/donate?server=1.2.3.4:1234&token=asdf`
+URL: `/donate?server=1.2.3.4:1234&token=asdf[&timeout=30000]`
 
 Returns: `{ msg: 'thank_you' | 'invalid_token' | 'invalid_url' }`
 
 'thank_you' indicates successful donation; 'invalid_url' or
 'invalid_token' signify that you sent bad data. URLs must be 4-octet
-IPv4 addresses with a port number (separated by a colon).
+IPv4 addresses with a port number (separated by a colon). `timeout` is
+an optional parameter specifying how long the server should keep the
+token for. Tokens typically expire after 60 seconds.
 
 ### Claim
 
@@ -69,3 +71,6 @@ available.
 
 `time` is the time when the token was submitted (in UTC milliseconds
 since the UNIX epoch).
+
+`timeout` is the time when the token should be considered expired (in
+UTC milliseconds since the UNIX epoch).

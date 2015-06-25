@@ -83,7 +83,18 @@ app.get('/donate', function (req, res) {
     return;
   }
 
-  token = { time: time(), token: token };
+  var timeout = TICKET_EXPIRE_MS;
+  if (req.query.timeout) {
+    timeout = parseInt(req.query.timeout, 10);
+  }
+
+  var t = time();
+  token = {
+    time: t,
+    timeout: t + timeout,
+    token: token.replace(' ', '+')
+  };
+
   if (tokens.hasOwnProperty(server)) {
     tokens[server].push(token);
     token_counts[server] += 1;
@@ -102,29 +113,39 @@ app.get('/claim', function (req, res) {
   }
 
   var server = req.query.server;
-  if (tokens.hasOwnProperty(server) &&
-      tokens[server].length > 0) {
-    var token = tokens[server].shift();
-    token_counts[server] -= 1;
-    res.send({ msg: 'available',
-               token: token.token,
-               time: token.time });
-  } else {
+
+  if (!tokens.hasOwnProperty(server)) {
     res.send({ msg: 'unavailable' });
+    return;
   }
+
+  expireTokens(server);
+
+  if (tokens[server].length !== 0) {
+    res.send({ msg: 'unavailable' });
+    return;
+  }
+
+  var token = tokens[server].shift();
+  token_counts[server] -= 1;
+  res.send({ msg: 'available',
+             token: token.token,
+             time: token.time,
+             timeout: token.timeout});
 });
 
 setInterval(function () {
-  var cutoff = time() - TICKET_EXPIRE_MS;
+  Object.keys(tokens).forEach(expireTokens);
+}, 1000);
 
-  Object.keys(tokens).forEach(function (url) {
-    var arr = tokens[url];
-    while (arr.length > 0 && arr[0].time <= cutoff) {
-      token_counts[url] -= 1;
-      arr.shift();
-    }
-  });
-}, 10000);
+function expireTokens(url) {
+  var now = time();
+  var arr = tokens[url];
+  while (arr.length > 0 && arr[0].timeout <= now) {
+    token_counts[url] -= 1;
+    arr.shift();
+  }
+}
 
 app.use('/', express.static('static'));
 
