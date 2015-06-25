@@ -19,10 +19,11 @@ then you take :)
 If you want to help donate extra tokens:
 https://github.com/Gcommer/agar-token-donator
 
-*IMPORTANT NOTE:* All tokens are only accepted by Agar.io if they are
-redeemed by a client with the same User-Agent string that accepted
-them. For that reason, ALL tokens donated to this service should have
-been generated and should be used with the following User-Agent
+At some time, tokens may be restricted by User-Agent. If this becomes
+an issue, the following User-Agent should be used by all clients for
+requesting tokens from 'm.agar.io' and redeeming them during the
+websocket connection.
+
 `Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0`
 
 ## API
