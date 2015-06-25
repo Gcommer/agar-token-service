@@ -9,6 +9,8 @@ var tokens = {};
 var token_counts = {};
 var killFlag = false;
 
+var TICKET_EXPIRE_MS = 12 * 1000;
+
 // The second param to "".split is useless, so this just
 function strSingleSplit(str, sep) {
   var i = str.indexOf(sep);
@@ -46,8 +48,6 @@ function time() {
   ));
   return +utc;
 }
-
-var TICKET_EXPIRE_MS = 60 * 1000;
 
 function isValidURL(url) {
   var parts = url.split(':');
