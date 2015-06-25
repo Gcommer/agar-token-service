@@ -9,6 +9,29 @@ var tokens = {};
 var token_counts = {};
 var killFlag = false;
 
+// The second param to "".split is useless, so this just
+function strSingleSplit(str, sep) {
+  var i = str.indexOf(sep);
+  return [str.slice(0, i), str.slice(i + 1)];
+}
+
+// Yes express.js parses the query string for us, but we need the raw
+// string without replacing '+' -> ' '
+//
+// just doing a .replace after the fact runs the risk of literal
+// spaces being dumped if they get added
+function rawQueryStringParse(url) {
+  // chop off the first ? and backwards
+  var queryString = strSingleSplit(unescape(url), '?')[1];
+
+  return queryString.split('&').map(function (kv) {
+    return strSingleSplit(kv, '=');
+  }).reduce(function (acc, cur) {
+    acc[cur[0]] = cur[1];
+    return acc;
+  }, {});
+}
+
 // milliseconds since the UNIX epoch (UTC)
 function time() {
   var now = new Date();
@@ -71,7 +94,8 @@ app.get('/donate', function (req, res) {
   }
 
   var server = req.query.server;
-  var token = req.query.token;
+
+  var token = rawQueryStringParse(req.url).token;
 
   if (!isValidURL(server)) {
     res.send({ msg: 'invalid_url' });
@@ -92,7 +116,7 @@ app.get('/donate', function (req, res) {
   token = {
     time: t,
     timeout: t + timeout,
-    token: token.replace(' ', '+')
+    token: token
   };
 
   if (tokens.hasOwnProperty(server)) {
