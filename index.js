@@ -11,7 +11,6 @@ var token_counts = {};
 var KILL_FLAG = false;
 var TICKET_EXPIRE_MS = 12 * 1000;
 
-// The second param to "".split is useless, so this just
 function strSingleSplit(str, sep) {
   var i = str.indexOf(sep);
   return [str.slice(0, i), str.slice(i + 1)];
