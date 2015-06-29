@@ -118,7 +118,7 @@ app.get('/donate', function (req, res) {
     return;
   }
 
-  if (typeof token !== 'string' || token.length === 0) {
+  if (typeof token !== 'string' || token.length === 0 || token.length > 128) {
     res.send({ msg: 'invalid_token' });
     return;
   }
