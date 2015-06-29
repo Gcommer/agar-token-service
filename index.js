@@ -8,7 +8,7 @@ var app = express();
 var tokens = {};
 var token_counts = {};
 
-var killFlag = false;
+var KILL_FLAG = false;
 var TICKET_EXPIRE_MS = 12 * 1000;
 
 // The second param to "".split is useless, so this just
@@ -75,7 +75,7 @@ function isValidURL(url) {
 }
 
 app.get('/status', function (req, res) {
-  if (killFlag) {
+  if (KILL_FLAG) {
     res.send({ msg: 'KILLED' });
     return;
   }
@@ -97,7 +97,7 @@ app.get('/status', function (req, res) {
 });
 
 app.get('/donate', function (req, res) {
-  if (killFlag) {
+  if (KILL_FLAG) {
     res.send({ msg: 'KILLED' });
     return;
   }
@@ -154,7 +154,7 @@ app.get('/donate', function (req, res) {
 });
 
 app.get('/claim', function (req, res) {
-  if (killFlag) {
+  if (KILL_FLAG) {
     res.send({ msg: 'KILLED' });
     return;
   }
