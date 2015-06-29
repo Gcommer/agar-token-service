@@ -7,8 +7,8 @@ var app = express();
 
 var tokens = {};
 var token_counts = {};
-var killFlag = false;
 
+var killFlag = false;
 var TICKET_EXPIRE_MS = 12 * 1000;
 
 // The second param to "".split is useless, so this just
@@ -50,6 +50,12 @@ function time() {
 }
 
 function isValidURL(url) {
+  // Cut off the proto
+  var slashslash = url.indexOf('//');
+  if (slashslash !== -1) {
+    url = url.slice(slashslash + 2);
+  }
+
   var parts = url.split(':');
   if (parts.length !== 2) {
     return false;
@@ -123,17 +129,17 @@ app.get('/donate', function (req, res) {
   }
 
   var t = time();
-  token = {
+  token_obj = {
     time: t,
     timeout: t + timeout,
     token: token
   };
 
   if (tokens.hasOwnProperty(server)) {
-    tokens[server].push(token);
+    tokens[server].push(token_obj);
     token_counts[server] += 1;
   } else {
-    tokens[server] = [token];
+    tokens[server] = [token_obj];
     token_counts[server] = 1;
   }
 
@@ -148,6 +154,11 @@ app.get('/claim', function (req, res) {
 
   var server = req.query.server;
 
+  if (typeof server !== 'string' || !isValidURL(server)) {
+    res.send({ msg: 'invalid_url' });
+    return;
+  }
+
   if (!tokens.hasOwnProperty(server)) {
     res.send({ msg: 'unavailable' });
     return;
@@ -155,17 +166,17 @@ app.get('/claim', function (req, res) {
 
   expireTokens(server);
 
-  if (tokens[server].length !== 0) {
+  if (tokens[server].length === 0) {
     res.send({ msg: 'unavailable' });
     return;
   }
 
-  var token = tokens[server].shift();
+  var token_obj = tokens[server].shift();
   token_counts[server] -= 1;
   res.send({ msg: 'available',
-             token: token.token,
-             time: token.time,
-             timeout: token.timeout});
+             token: token_obj.token,
+             time: token_obj.time,
+             timeout: token_obj.timeout});
 });
 
 setInterval(function () {
