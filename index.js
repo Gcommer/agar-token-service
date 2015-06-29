@@ -17,6 +17,15 @@ function strSingleSplit(str, sep) {
   return [str.slice(0, i), str.slice(i + 1)];
 }
 
+function stripProto(url) {
+  var slashslash = url.indexOf('//');
+  if (slashslash !== -1) {
+    url = url.slice(slashslash + 2);
+  }
+
+  return url;
+}
+
 // Yes express.js parses the query string for us, but we need the raw
 // string without replacing '+' -> ' '
 //
@@ -109,8 +118,7 @@ app.get('/donate', function (req, res) {
     return;
   }
 
-  var server = req.query.server;
-
+  var server = stripProto(req.query.server);
   var token = rawQueryStringParse(req.url).token;
 
   if (!isValidURL(server)) {
