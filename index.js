@@ -59,12 +59,6 @@ function time() {
 }
 
 function isValidURL(url) {
-  // Cut off the proto
-  var slashslash = url.indexOf('//');
-  if (slashslash !== -1) {
-    url = url.slice(slashslash + 2);
-  }
-
   var parts = url.split(':');
   if (parts.length !== 2) {
     return false;
@@ -134,6 +128,11 @@ app.get('/donate', function (req, res) {
   var timeout = TICKET_EXPIRE_MS;
   if (req.query.timeout) {
     timeout = parseInt(req.query.timeout, 10);
+  }
+
+  if (isNaN(timeout) || timeout > (120 * 1000)) {
+    res.send({ msg: 'invalid_timeout' });
+    return;
   }
 
   var t = time();
