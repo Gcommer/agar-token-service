@@ -93,6 +93,16 @@ app.get('/donate', function (req, res) {
     return;
   }
 
+  if (!req.query.hasOwnProperty('server')) {
+    res.send({ msg: 'invalid_url' });
+    return;
+  }
+
+  if (!req.query.hasOwnProperty('token')) {
+    res.send({ msg: 'invalid_token' });
+    return;
+  }
+
   var server = req.query.server;
 
   var token = rawQueryStringParse(req.url).token;
